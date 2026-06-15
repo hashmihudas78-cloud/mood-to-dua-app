@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mood to Dua 🌙</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #1c2230;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.15);
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --text3: #6e7681;
+      --gold: #c9a84c;
+      --gold2: #e8c876;
+      --gold-glow: rgba(201,168,76,0.15);
+      --sad: #378ADD;
+      --sad-bg: rgba(55,138,221,0.12);
+      --angry: #e05c5c;
+      --angry-bg: rgba(224,92,92,0.12);
+      --stressed: #d4875a;
+      --stressed-bg: rgba(212,135,90,0.12);
+      --happy: #52a96e;
+      --happy-bg: rgba(82,169,110,0.12);
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Stars background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 35% 60%, rgba(255,255,255,0.25) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 15%, rgba(255,255,255,0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 45%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 10% 75%, rgba(255,255,255,0.2) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.2) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 82% 12%, rgba(201,168,76,0.5) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 45% 35%, rgba(201,168,76,0.4) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 4rem;
+    }
+
+    /* HEADER */
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .moon-crescent {
+      font-size: 52px;
+      line-height: 1;
+      margin-bottom: 1rem;
+      display: block;
+      filter: drop-shadow(0 0 18px rgba(201,168,76,0.5));
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .app-title {
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .app-title span {
+      color: var(--gold2);
+    }
+
+    .app-subtitle {
+      font-size: 14px;
+      color: var(--text2);
+      font-weight: 300;
+    }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 1rem auto 0;
+    }
+
+    /* MOOD SECTION */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 1rem;
+    }
+
+    .mood-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 2rem;
+    }
+
+    .mood-btn {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mood-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.2s;
+      border-radius: var(--radius);
+    }
+
+    .mood-btn:hover { transform: translateY(-2px); border-color: var(--border2); }
+    .mood-btn:hover::before { opacity: 1; }
+    .mood-btn:active { transform: translateY(0); }
+
+    .mood-btn.sad::before { background: var(--sad-bg); }
+    .mood-btn.angry::before { background: var(--angry-bg); }
+    .mood-btn.stressed::before { background: var(--stressed-bg); }
+    .mood-btn.happy::before { background: var(--happy-bg); }
+
+    .mood-btn.selected.sad { border-color: var(--sad); background: var(--sad-bg); }
+    .mood-btn.selected.angry { border-color: var(--angry); background: var(--angry-bg); }
+    .mood-btn.selected.stressed { border-color: var(--stressed); background: var(--stressed-bg); }
+    .mood-btn.selected.happy { border-color: var(--happy); background: var(--happy-bg); }
+
+    .mood-emoji {
+      font-size: 34px;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mood-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      position: relative;
+      z-index: 1;
+    }
+
+    .mood-urdu {
+      font-size: 13px;
+      color: var(--text2);
+      font-family: 'Amiri', serif;
+      direction: rtl;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mood-btn.selected .mood-name { font-weight: 600; }
+    .mood-btn.selected.sad .mood-name { color: #7ab8f5; }
+    .mood-btn.selected.angry .mood-name { color: #f08080; }
+    .mood-btn.selected.stressed .mood-name { color: #e8a87c; }
+    .mood-btn.selected.happy .mood-name { color: #7dc89a; }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 2.5rem;
+      background: var(--bg2);
+      border: 1px dashed var(--border2);
+      border-radius: var(--radius);
+      color: var(--text2);
+    }
+
+    .empty-state .empty-icon { font-size: 28px; margin-bottom: 8px; }
+    .empty-state p { font-size: 14px; }
+
+    /* RESULT CARDS */
+    .results { display: none; flex-direction: column; gap: 12px; }
+    .results.visible { display: flex; animation: fadeIn 0.4s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      border-radius: 3px 0 0 3px;
+    }
+
+    .card.dua::before { background: var(--sad); }
+    .card.quran::before { background: var(--happy); }
+    .card.message::before { background: var(--gold); }
+    .card.challenge::before { background: #a78bfa; }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .card-icon { font-size: 16px; }
+
+    .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card.dua .card-label { color: #7ab8f5; }
+    .card.quran .card-label { color: #7dc89a; }
+    .card.message .card-label { color: var(--gold2); }
+    .card.challenge .card-label { color: #c4b5fd; }
+
+    .arabic-text {
+      font-family: 'Amiri', serif;
+      font-size: 22px;
+      direction: rtl;
+      text-align: right;
+      color: var(--text);
+      line-height: 2;
+      margin-bottom: 10px;
+    }
+
+    .transliteration {
+      font-size: 13px;
+      color: var(--text2);
+      font-style: italic;
+      margin-bottom: 6px;
+    }
+
+    .translation {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .reference {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text3);
+      background: var(--bg3);
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .quran-location {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .loc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid;
+    }
+
+    .loc-badge.para {
+      background: rgba(127,119,221,0.1);
+      border-color: rgba(127,119,221,0.35);
+      color: #b5b0f0;
+    }
+
+    .loc-badge.surah {
+      background: rgba(82,169,110,0.1);
+      border-color: rgba(82,169,110,0.35);
+      color: #7dc89a;
+    }
+
+    .loc-badge.ayat {
+      background: rgba(201,168,76,0.1);
+      border-color: rgba(201,168,76,0.35);
+      color: var(--gold2);
+    }
+
+    .loc-badge .badge-icon { font-size: 12px; }
+
+    .surah-arabic-name {
+      font-family: 'Amiri', serif;
+      font-size: 14px;
+      direction: rtl;
+    }
+
+    /* SHARE BTN */
+    .share-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--text2);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn:hover { background: var(--bg3); color: var(--text); border-color: var(--border2); }
+    .btn.primary { background: var(--gold-glow); color: var(--gold2); border-color: rgba(201,168,76,0.4); }
+    .btn.primary:hover { background: rgba(201,168,76,0.2); }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--text3);
+      font-size: 12px;
+    }
+
+    .footer .arabic-footer {
+      font-family: 'Amiri', serif;
+      font-size: 18px;
+      color: var(--gold);
+      direction: rtl;
+      margin-bottom: 6px;
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      font-size: 13px;
+      transition: transform 0.3s ease;
+      z-index: 100;
+      white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 480px) {
+      .app-title { font-size: 26px; }
+      .mood-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .mood-btn { padding: 1rem 0.75rem; }
+      .mood-emoji { font-size: 28px; }
+      .arabic-text { font-size: 20px; }
+      .card { padding: 1.2rem; }
+      .container { padding: 2rem 1rem 3rem; }
+      .share-row { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .moon-crescent { animation: none; }
+      .results { animation: none; }
+      .mood-btn { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header">
+    <span class="moon-crescent">🌙</span>
+    <h1 class="app-title">Mood to <span>Dua</span></h1>
+    <p class="app-subtitle">Apna mood chunein — Allah ki raah mein sukoon paayein</p>
+    <div class="divider"></div>
+  </header>
+
+  <!-- MOOD SELECTOR -->
+  <p class="section-label">Aaj aap kaisa mehsoos kar rahe hain?</p>
+  <div class="mood-grid" role="group" aria-label="Mood selection">
+    <button class="mood-btn sad" onclick="selectMood('sad')" aria-pressed="false">
+      <span class="mood-emoji" aria-hidden="true">😔</span>
+      <span class="mood-name">Sad</span>
+      <span class="mood-urdu">اداسی</span>
+    </button>
+    <button class="mood-btn angry" onclick="selectMood('angry')" aria-pressed="false">
+      <span class="mood-emoji" aria-hidden="true">😠</span>
+      <span class="mood-name">Angry</span>
+      <span class="mood-urdu">غصہ</span>
+    </button>
+    <button class="mood-btn stressed" onclick="selectMood('stressed')" aria-pressed="false">
+      <span class="mood-emoji" aria-hidden="true">😣</span>
+      <span class="mood-name">Stressed</span>
+      <span class="mood-urdu">پریشانی</span>
+    </button>
+    <button class="mood-btn happy" onclick="selectMood('happy')" aria-pressed="false">
+      <span class="mood-emoji" aria-hidden="true">😊</span>
+      <span class="mood-name">Happy</span>
+      <span class="mood-urdu">خوشی</span>
+    </button>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="empty-state">
+    <div class="empty-icon">✨</div>
+    <p>Upar se apna mood select karein aur apni dua paayein</p>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results" aria-live="polite">
+
+    <div class="card dua">
+      <div class="card-header">
+        <span class="card-icon">🤲</span>
+        <span class="card-label">Dua</span>
+      </div>
+      <div class="arabic-text" id="dua-arabic"></div>
+      <div class="transliteration" id="dua-transliteration"></div>
+      <div class="translation" id="dua-translation"></div>
+    </div>
+
+    <div class="card quran">
+      <div class="card-header">
+        <span class="card-icon">📖</span>
+        <span class="card-label">Quran Verse</span>
+      </div>
+      <div class="arabic-text" id="quran-arabic"></div>
+      <div class="transliteration" id="quran-transliteration"></div>
+      <div class="translation" id="quran-translation"></div>
+      <div class="quran-location">
+        <span class="loc-badge para">📚 <span id="quran-para"></span></span>
+        <span class="loc-badge surah">📖 <span id="quran-surah-name"></span> &nbsp;<span class="surah-arabic-name" id="quran-surah-arabic"></span></span>
+        <span class="loc-badge ayat">🔖 <span id="quran-ayat"></span></span>
+      </div>
+    </div>
+
+    <div class="card message">
+      <div class="card-header">
+        <span class="card-icon">💬</span>
+        <span class="card-label">Motivational Message</span>
+      </div>
+      <div class="translation" id="motivational"></div>
+    </div>
+
+    <div class="card challenge">
+      <div class="card-header">
+        <span class="card-icon">⭐</span>
+        <span class="card-label">Aaj Ka Chhota Challenge</span>
+      </div>
+      <div class="translation" id="challenge"></div>
+    </div>
+
+    <div class="share-row">
+      <button class="btn primary" onclick="copyToClipboard()">📋 Copy Karein</button>
+      <button class="btn" onclick="shareApp()">🔗 Share Karein</button>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="arabic-footer">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+    <p>Har mood mein Allah ka dhikr — sukoon ka asli raasta</p>
+  </footer>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const data = {
+    sad: {
+      dua: {
+        arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ",
+        transliteration: "Allahumma inni a'udhu bika minal-hammi wal-hazan",
+        translation: "Aey Allah! Main tujh se gham aur udaasi se panah maangta/maangti hoon."
+      },
+      quran: {
+        arabic: "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ",
+        transliteration: "Alaa bi-dhikrillahi tatma'innul quloob",
+        translation: "Sunno! Allah ki yaad se hi dilon ko sukoon milta hai.",
+        para: "Para 13 — وَمَا أُبَرِّئُ",
+        surahName: "Surah Ar-Ra'd (سورة الرعد)",
+        surahArabic: "سورة الرعد",
+        ayat: "Ayat 28 — Surah 13"
+      },
+      motivational: "Aapka dil abhi bhaari lag raha hai, lekin yaad rakhein — har raat ke baad subah hoti hai. Allah ne aapko in aansuon mein bhi izzat di hai. Yeh dard aarzi hai, lekin Allah ki mohabbat hamesha ke liye hai. 💙",
+      challenge: "Aaj 10 minute ke liye apni aankhein band karein, 3 cheezein sochain jiske liye aap shukrguzaar hain — chahe woh chhoti hi kyun na ho. Phir 'Alhamdulillah' 10 baar kehein aur dekhen kaisa mehsoos hota hai."
+    },
+    angry: {
+      dua: {
+        arabic: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ",
+        transliteration: "A'udhu billahi minash-shaytanir rajeem",
+        translation: "Main shaitan-e-rajeem se Allah ki panah maangta/maangti hoon."
+      },
+      quran: {
+        arabic: "وَالْكَاظِمِينَ الْغَيْظَ وَالْعَافِينَ عَنِ النَّاسِ ۗ وَاللَّهُ يُحِبُّ الْمُحْسِنِينَ",
+        transliteration: "Wal-kaadhimeena al-ghaidha wal-'aafeena 'anin-naas, wallaahu yuhibbul-muhsineen",
+        translation: "Woh jo apne gusse ko peete hain aur logon ko maaf karte hain — aur Allah aisa karne waalon se mohabbat karta hai.",
+        para: "Para 4 — لَن تَنَالُوا",
+        surahName: "Surah Aal-Imran (سورة آل عمران)",
+        surahArabic: "سورة آل عمران",
+        ayat: "Ayat 134 — Surah 3"
+      },
+      motivational: "Gussa ek insaani ehsaas hai — aap koi ghalat nahin kar rahe. Lekin Allah ne sabse bada darja unhe diya jo apna gussa pi jaate hain. Yeh lamha aapko mazboot bana sakta hai, kamzor nahin. Ek gehri saans lein. 🌬️",
+      challenge: "Abhi uthein, wudu karein — thanda paani gusse ki aag bujhata hai. Phir 2 rakat nafl parhein. Agar abhi namaaz ka waqt nahin, toh bas 'A'udhu billah' 3 baar kehein, baith jaayein, aur 5 minute khamosh rahein."
+    },
+    stressed: {
+      dua: {
+        arabic: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+        transliteration: "Hasbunallahu wa ni'mal wakeel",
+        translation: "Hamara Allah kaafi hai, aur woh behترین کارساز ہے۔"
+      },
+      quran: {
+        arabic: "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ۞ إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+        transliteration: "Fa-inna ma'al-'usri yusraa, inna ma'al-'usri yusraa",
+        translation: "Yaad rakhein — mushkil ke saath aasaani hai. Haan, mushkil ke saath zaroor aasaani hai.",
+        para: "Para 30 — عَمَّ يَتَسَاءَلُونَ",
+        surahName: "Surah Ash-Sharh (سورة الشرح)",
+        surahArabic: "سورة الشرح",
+        ayat: "Ayat 5–6 — Surah 94"
+      },
+      motivational: "Aap itna zyada soch rahe hain isliye kyunki aap zimmedaar hain aur aapko fikr hai — yeh aapki khoobi hai, kami nahin. Lekin yaad rakhein: aap akele nahin hain. Allah Ar-Razzaq hai, Woh khud raasta nikaalega. Apna bojh Uspe daal dein. 🤍",
+      challenge: "Ek kagaz lo aur sab tension likh do. Phir woh kagaz fold kar ke rakh do aur kaho: 'Yeh sab Allah ke hawaale.' Aaj sirf ek chhota kaam mukammal karo — progress ka ehsaas stress ko kam karta hai."
+    },
+    happy: {
+      dua: {
+        arabic: "الْحَمْدُ لِلَّهِ الَّذِي بِنِعْمَتِهِ تَتِمُّ الصَّالِحَاتُ",
+        transliteration: "Alhamdulillahil-ladhi bi-ni'matihi tatimmus-saalihaat",
+        translation: "Shukar hai Allah ka, jis ki naimat se tamaam nekiyan poori hoti hain."
+      },
+      quran: {
+        arabic: "لَئِن شَكَرْتُمْ لَأَزِيدَنَّكُمْ",
+        transliteration: "La'in shakartum la-azeedannakum",
+        translation: "Agar tum shukar karo ge, toh main tumhein aur zyada doon ga.",
+        para: "Para 13 — وَمَا أُبَرِّئُ",
+        surahName: "Surah Ibrahim (سورة إبراهيم)",
+        surahArabic: "سورة إبراهيم",
+        ayat: "Ayat 7 — Surah 14"
+      },
+      motivational: "Maasha Allah! Yeh khushi Allah ki taraf se aik khoobsurat naimat hai. Apni is khushi mein apne azeezoon ko bhi shareek karein — kyunki mohabbat baant ne se aur badhti hai. Aaj ka yeh din yaadon mein mahfooz kar lein! 🌟",
+      challenge: "Aaj apni is khushi mein kisi ek insaan ko khush karein — koi gift, koi message, ya bas ek dil se muskaan. Aur 2 rakat shukrane ke nafl zaroor parhein. Khushi manana bhi sunnat hai!"
+    }
+  };
+
+  let currentMood = null;
+
+  function selectMood(mood) {
+    currentMood = mood;
+    document.querySelectorAll('.mood-btn').forEach(btn => {
+      btn.classList.remove('selected');
+      btn.setAttribute('aria-pressed', 'false');
+    });
+    const selectedBtn = document.querySelector('.mood-btn.' + mood);
+    selectedBtn.classList.add('selected');
+    selectedBtn.setAttribute('aria-pressed', 'true');
+
+    const d = data[mood];
+    document.getElementById('dua-arabic').textContent = d.dua.arabic;
+    document.getElementById('dua-transliteration').textContent = d.dua.transliteration;
+    document.getElementById('dua-translation').textContent = d.dua.translation;
+    document.getElementById('quran-arabic').textContent = d.quran.arabic;
+    document.getElementById('quran-transliteration').textContent = d.quran.transliteration;
+    document.getElementById('quran-translation').textContent = d.quran.translation;
+    document.getElementById('quran-para').textContent = d.quran.para;
+    document.getElementById('quran-surah-name').textContent = d.quran.surahName;
+    document.getElementById('quran-surah-arabic').textContent = d.quran.surahArabic;
+    document.getElementById('quran-ayat').textContent = d.quran.ayat;
+    document.getElementById('motivational').textContent = d.motivational;
+    document.getElementById('challenge').textContent = d.challenge;
+
+    document.getElementById('empty-state').style.display = 'none';
+    const results = document.getElementById('results');
+    results.classList.remove('visible');
+    void results.offsetWidth;
+    results.classList.add('visible');
+
+    setTimeout(() => {
+      results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function copyToClipboard() {
+    if (!currentMood) return;
+    const d = data[currentMood];
+    const text = `🌙 Mood to Dua\n\n🤲 Dua:\n${d.dua.arabic}\n${d.dua.transliteration}\n${d.dua.translation}\n\n📖 Quran:\n${d.quran.arabic}\n${d.quran.translation}\n📚 ${d.quran.para} | ${d.quran.surahName} | ${d.quran.ayat}\n\n💬 ${d.motivational}\n\n⭐ Challenge: ${d.challenge}`;
+    navigator.clipboard.writeText(text).then(() => showToast('✅ Copy ho gaya!')).catch(() => showToast('Copy nahin hua, dobara try karein'));
+  }
+
+  function shareApp() {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Mood to Dua 🌙',
+        text: 'Apna mood chunein aur dua, Quran verse aur motivation paayein!',
+        url: window.location.href
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => showToast('🔗 Link copy ho gaya!')).catch(() => showToast('Share nahin ho saka'));
+    }
+  }
+</script>
+</body>
+</html>
